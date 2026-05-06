@@ -39,11 +39,6 @@ class TestCourierLogin:
             assert ERROR_NOT_ENOUGH_DATA_LOGIN in body["message"]
         except ReadTimeout:
             pytest.skip("API зависает при невалидных данных (известный баг)")
-        #resp = client.login_courier(payload)
-        #assert resp.status_code == 400
-        #body = resp.json()
-        #assert "message" in body
-        #assert ERROR_NOT_ENOUGH_DATA_LOGIN in body["message"]
 
     @allure.title("Ошибка при неверном логине/пароле: 404")
     def test_login_wrong_password_returns_error(self, new_courier):
