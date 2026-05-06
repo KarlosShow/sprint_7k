@@ -10,4 +10,4 @@ class OrdersClient(BaseClient):
 
     @allure.step("Получить список заказов")
     def get_orders_list(self):
-        return self.request("GET", ORDERS_LIST, timeout=30)
+        return self.request("GET", ORDERS_LIST, timeout=30) # при 10 тест падает видимо не успевает загрузится эндотип медленный
