@@ -17,14 +17,14 @@ def build_courier_login_payload(login: str, password: str):
     payload["password"] = password
     return payload
 
-@allure.step("Создать курьера и получить его id через логин") # создаем логинисмся достсаем id
-def create_courier_and_get_id(courier_client):
-    courier_payload = build_unique_courier_payload()
-    create_resp = courier_client.create_courier(courier_payload)
-    assert create_resp.status_code == 201, f"Courier create failed: {create_resp.status_code} {create_resp.text}"
-    login_payload = build_courier_login_payload(courier_payload["login"], courier_payload["password"])
-    login_resp = courier_client.login_courier(login_payload)
-    assert login_resp.status_code == 200, f"Courier login failed: {login_resp.status_code} {login_resp.text}"
-    courier_id = login_resp.json().get("id")
-    assert isinstance(courier_id, int), f"No courier id in response: {login_resp.text}"
-    return {"courier": courier_payload, "id": courier_id}
+#@allure.step("Создать курьера и получить его id через логин") # создаем логинисмся достсаем id
+#def create_courier_and_get_id(courier_client):
+#    courier_payload = build_unique_courier_payload()
+#    create_resp = courier_client.create_courier(courier_payload)
+#    assert create_resp.status_code == 201, f"Courier create failed: {create_resp.status_code} {create_resp.text}"
+#    login_payload = build_courier_login_payload(courier_payload["login"], courier_payload["password"])
+#    login_resp = courier_client.login_courier(login_payload)
+#    assert login_resp.status_code == 200, f"Courier login failed: {login_resp.status_code} {login_resp.text}"
+#    courier_id = login_resp.json().get("id")
+#   assert isinstance(courier_id, int), f"No courier id in response: {login_resp.text}"
+#    return {"courier": courier_payload, "id": courier_id}

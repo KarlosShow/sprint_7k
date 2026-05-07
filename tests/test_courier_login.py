@@ -11,10 +11,13 @@ from helpers.courier_helpers import build_courier_login_payload
 class TestCourierLogin:
 
     @allure.title("Курьер может авторизоваться: 200 и id")
-    def test_courier_can_login(self, new_courier):
-        client = CourierClient(BASE_URL)
-        courier = new_courier["courier"]
-        resp = client.login_courier(build_courier_login_payload(courier["login"], courier["password"]))
+    def test_courier_can_login(self, courier_client, new_courier):
+        resp = courier_client.login_courier(
+        build_courier_login_payload(
+            new_courier["login"],
+            new_courier["password"]
+        )
+    )
         assert resp.status_code == 200
         body = resp.json()
         assert "id" in body
@@ -41,10 +44,14 @@ class TestCourierLogin:
             pytest.skip("API зависает при невалидных данных (известный баг)")
 
     @allure.title("Ошибка при неверном логине/пароле: 404")
-    def test_login_wrong_password_returns_error(self, new_courier):
-        client = CourierClient(BASE_URL)
-        courier = new_courier["courier"]
-        resp = client.login_courier(build_courier_login_payload(courier["login"], "wrong_password"))
+    def test_login_wrong_password_returns_error(self, courier_client, new_courier):
+
+        resp = courier_client.login_courier(
+            build_courier_login_payload(
+                new_courier["login"],
+                "wrong_password"
+            )
+        )
         assert resp.status_code == 404
         body = resp.json()
         assert "message" in body

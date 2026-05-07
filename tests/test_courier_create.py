@@ -16,9 +16,12 @@ class TestCourierCreate:
         resp = client.create_courier(payload)
         assert resp.status_code == 201
         assert resp.json() == {"ok": True}
-        login_resp = client.login_courier(build_courier_login_payload(payload["login"], payload["password"]))
-        courier_id = login_resp.json().get("id")
-        client.delete_courier(courier_id)
+        login_resp = client.login_courier(
+            build_courier_login_payload(payload["login"], payload["password"])
+        )
+        if login_resp.status_code == 200:
+            courier_id = login_resp.json().get("id")
+            client.delete_courier(courier_id)
 
     @allure.title("Нельзя создать двух одинаковых курьеров: 409 и ошибка")
     def test_cannot_create_duplicate_courier(self):
@@ -32,9 +35,12 @@ class TestCourierCreate:
         body = second.json()
         assert "message" in body
         assert ERROR_LOGIN_ALREADY_USED in body["message"]
-        login_resp = client.login_courier(build_courier_login_payload(payload["login"], payload["password"]))
-        courier_id = login_resp.json().get("id")
-        client.delete_courier(courier_id)
+        login_resp = client.login_courier(
+            build_courier_login_payload(payload["login"], payload["password"])
+        )
+        if login_resp.status_code == 200:
+            courier_id = login_resp.json().get("id")
+            client.delete_courier(courier_id)
 
     @allure.title("Создание курьера требует обязательные поля login и password: иначе 400")
     @pytest.mark.parametrize("missing_field", ["login", "password"])
