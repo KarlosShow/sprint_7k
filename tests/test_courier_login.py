@@ -32,20 +32,20 @@ class TestCourierLogin:
             {},
         ],
     )
+    @pytest.mark.xfail(
+        raises=ReadTimeout,
+        reason="Известный баг API: запрос зависает вместо ответа 400"
+    )
     def test_login_requires_required_fields(self, payload):
         client = CourierClient(BASE_URL)
-        try:
-            resp = client.login_courier(payload)
-            assert resp.status_code == 400
-            body = resp.json()
-            assert "message" in body
-            assert ERROR_NOT_ENOUGH_DATA_LOGIN in body["message"]
-        except ReadTimeout:
-            pytest.skip("API зависает при невалидных данных (известный баг)")
+        resp = client.login_courier(payload)
+        assert resp.status_code == 400
+        body = resp.json()
+        assert "message" in body
+        assert ERROR_NOT_ENOUGH_DATA_LOGIN in body["message"]
 
     @allure.title("Ошибка при неверном логине/пароле: 404")
     def test_login_wrong_password_returns_error(self, courier_client, new_courier):
-
         resp = courier_client.login_courier(
             build_courier_login_payload(
                 new_courier["login"],
